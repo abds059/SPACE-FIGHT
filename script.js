@@ -201,3 +201,41 @@ function checkcollision(a, b){
     return a.x < b.x + b.width && a.x + a.width > b.x &&
            a.y < b.y + b.height && a.y + a.height > b.y;
 }
+
+//For Phone controls
+let touchstartX = 0;
+let touchendX = 0;
+
+document.addEventListener("touchstart", (e)=>{
+    touchstartX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchmove", (e)=>{
+    e.preventDefault();
+
+    touchendX = e.touches[0].clientX;
+    let diff = touchendX - touchstartX;
+
+    if(!gameover){
+        if(diff > 20 && ship.x + shipvelocityX + ship.width <= board.width){
+            ship.x += shipvelocityX;
+        }
+        else if(diff < -20 && ship.x - shipvelocityX >= 0){
+            ship.x -= shipvelocityX;
+        }
+    }
+    touchstartX = touchendX;
+});
+
+document.addEventListener("touchend", (e)=>{
+    if(!gameover){
+        let bullet = {
+            x: ship.x + ship.width * 15 / 32,
+            y: ship.y,
+            width: tilesize / 8,
+            height: tilesize / 2,
+            used: false
+        };
+        bulletarr.push(bullet);
+    }
+});
